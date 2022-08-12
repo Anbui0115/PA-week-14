@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const COLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
 
@@ -9,6 +10,9 @@ function FruitForm({ fruits }) {
   const [color, setColor] = useState(COLORS[0]);
   const [seeds, setSeeds] = useState("yes");
   const [validationErrors, setValidationErrors] = useState([]);
+
+  const history = useHistory();
+
   useEffect(() => {
     const errors = [];
 
@@ -18,22 +22,28 @@ function FruitForm({ fruits }) {
       errors.push("Sweetness must be between 1 and 10");
     if (fruits.map((fruit) => fruit.name).includes(name))
       errors.push("Name already exists.");
-    validationErrors = errors;
-  });
+    setValidationErrors(errors);
+  }, [name, sweetness]);
 
-  const checkError = (validationErrors) => {
-    if (validationErrors.length > 1) return false;
-    return true;
+  const submitted = (event) => {
+    event.preventDefault();
+    console.log({
+      name,
+      sweetness,
+      color,
+      seeds,
+    });
+    history.push("/");
   };
 
   return (
-    <form
-      className="fruit-form"
-      //OnSubmit??????
-      onSubmit={checkError()}
-    >
+    <form className="fruit-form" onSubmit={submitted}>
       <h2>Enter a Fruit</h2>
-      <ul className="errors"></ul>
+      <ul className="errors">
+        {validationErrors.map((err) => (
+          <li key={err}>{err}</li>
+        ))}
+      </ul>
       <label>
         Name
         <input
@@ -82,7 +92,9 @@ function FruitForm({ fruits }) {
         />
         Seeds
       </label>
-      <button type="submit">Submit Fruit</button>
+      <button type="submit" disabled={validationErrors.length > 0}>
+        Submit Fruit
+      </button>
     </form>
   );
 }
