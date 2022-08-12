@@ -22,6 +22,7 @@ function FruitForm({ fruits }) {
       errors.push("Sweetness must be between 1 and 10");
     if (fruits.map((fruit) => fruit.name).includes(name))
       errors.push("Name already exists.");
+      
     setValidationErrors(errors);
   }, [name, sweetness]);
 
