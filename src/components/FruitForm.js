@@ -29,6 +29,7 @@ function FruitForm({ fruits }) {
   return (
     <form
       className="fruit-form"
+      //OnSubmit??????
       onSubmit={checkError()}
     >
       <h2>Enter a Fruit</h2>
